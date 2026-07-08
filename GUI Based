@@ -1,0 +1,124 @@
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class StudentGradeTrackerGUI {
+
+    static ArrayList<String> names = new ArrayList<>();
+    static ArrayList<Double> marks = new ArrayList<>();
+
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Student Grade Tracker");
+        frame.setSize(550, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        Color bg = new Color(230, 245, 255);
+        Color btn = new Color(52, 152, 219);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(bg);
+
+        JLabel title = new JLabel("Student Grade Tracker");
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setBounds(130, 20, 300, 30);
+
+        JLabel nameLabel = new JLabel("Student Name");
+        nameLabel.setBounds(50, 80, 120, 25);
+
+        JTextField nameField = new JTextField();
+        nameField.setBounds(180, 80, 250, 30);
+
+        JLabel markLabel = new JLabel("Marks");
+        markLabel.setBounds(50, 130, 120, 25);
+
+        JTextField markField = new JTextField();
+        markField.setBounds(180, 130, 250, 30);
+
+        JTextArea output = new JTextArea();
+        output.setEditable(false);
+        output.setFont(new Font("Monospaced", Font.PLAIN, 14));
+
+        JScrollPane scroll = new JScrollPane(output);
+        scroll.setBounds(40, 260, 450, 170);
+
+        JButton addButton = new JButton("Add Student");
+        addButton.setBounds(50, 190, 150, 40);
+        addButton.setBackground(btn);
+        addButton.setForeground(Color.WHITE);
+
+        JButton reportButton = new JButton("Show Report");
+        reportButton.setBounds(260, 190, 170, 40);
+        reportButton.setBackground(new Color(46, 204, 113));
+        reportButton.setForeground(Color.WHITE);
+
+        addButton.addActionListener(e -> {
+            try {
+                String name = nameField.getText();
+                double mark = Double.parseDouble(markField.getText());
+
+                names.add(name);
+                marks.add(mark);
+
+                JOptionPane.showMessageDialog(frame, "Student Added Successfully!");
+
+                nameField.setText("");
+                markField.setText("");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Enter valid details.");
+            }
+        });
+
+        reportButton.addActionListener(e -> {
+
+            if (marks.size() == 0) {
+                JOptionPane.showMessageDialog(frame, "No Data Available");
+                return;
+            }
+
+            double total = 0;
+            double highest = marks.get(0);
+            double lowest = marks.get(0);
+
+            output.setText("");
+
+            output.append("------ STUDENT REPORT ------\n\n");
+
+            for (int i = 0; i < names.size(); i++) {
+
+                output.append((i + 1) + ". " + names.get(i)
+                        + " : " + marks.get(i) + "\n");
+
+                total += marks.get(i);
+
+                if (marks.get(i) > highest)
+                    highest = marks.get(i);
+
+                if (marks.get(i) < lowest)
+                    lowest = marks.get(i);
+            }
+
+            double avg = total / marks.size();
+
+            output.append("\n------------------------------\n");
+            output.append("Average : " + avg + "\n");
+            output.append("Highest : " + highest + "\n");
+            output.append("Lowest  : " + lowest);
+        });
+
+        panel.add(title);
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(markLabel);
+        panel.add(markField);
+        panel.add(addButton);
+        panel.add(reportButton);
+        panel.add(scroll);
+
+        frame.add(panel);
+        frame.setVisible(true);
+    }
+}
